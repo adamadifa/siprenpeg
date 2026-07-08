@@ -1,0 +1,26 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&display=swap');
+@import "tailwindcss";
+@plugin "daisyui";
+
+@theme {
+  --font-sans: "Poppins", sans-serif;
+}
+
+/* Custom theme colors or tweaks */
+:root {
+  --primary: #064e3b;
+  --primary-focus: #043427;
+}
+
+body {
+  font-family: var(--font-sans);
+}
+
+/* Hide scrollbar for swipeable containers */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
