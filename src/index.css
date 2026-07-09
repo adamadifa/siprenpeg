@@ -24,3 +24,8 @@ body {
   -ms-overflow-style: none;
   scrollbar-width: none;
 }
+
+/* Custom styles for Flatpickr to match Poppins */
+.flatpickr-calendar {
+  font-family: "Poppins", sans-serif !important;
+}

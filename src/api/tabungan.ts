@@ -50,7 +50,15 @@ export const getTabunganDetails = async (): Promise<TabunganDetailsResponse> => 
   return data
 }
 
-export const getSingleTabunganDetail = async (noRekening: string): Promise<TabunganDetailResponse> => {
-  const { data } = await apiClient.get<TabunganDetailResponse>(`/api/tabungan-karyawan/${noRekening}`)
+export const getSingleTabunganDetail = async (
+  noRekening: string,
+  startDate?: string,
+  endDate?: string
+): Promise<TabunganDetailResponse> => {
+  const params: Record<string, string> = {}
+  if (startDate) params.start_date = startDate
+  if (endDate) params.end_date = endDate
+
+  const { data } = await apiClient.get<TabunganDetailResponse>(`/api/tabungan-karyawan/${noRekening}`, { params })
   return data
 }

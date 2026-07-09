@@ -14,6 +14,7 @@ import PinjamanDetail from './pages/PinjamanDetail'
 import Ibadah from './pages/Ibadah'
 import Tabungan from './pages/Tabungan'
 import TabunganDetail from './pages/TabunganDetail'
+import PresensiHistory from './pages/PresensiHistory'
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -43,6 +44,7 @@ const App: React.FC = () => {
             <Route element={<Layout />}>
               <Route path="/dashboard" element={<Dashboard />} />
               <Route path="/presensi" element={<Presensi />} />
+              <Route path="/presensi/history" element={<PresensiHistory />} />
                <Route path="/izin" element={<Izin />} />
               <Route path="/checklist-ibadah" element={<Ibadah />} />
               <Route path="/profile" element={<Profile />} />

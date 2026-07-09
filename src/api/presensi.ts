@@ -57,3 +57,37 @@ export const storeEmployeePresensi = async (payload: StorePresensiPayload): Prom
   const { data } = await apiClient.post<StorePresensiResponse>('/api/presensi/karyawan/store', payload)
   return data
 }
+
+export interface PresensiHistoryItem {
+  id: number
+  npp: string
+  tanggal: string
+  jam_in: string | null
+  jam_out: string | null
+  lokasi_in: string | null
+  lokasi_out: string | null
+  foto_in: string | null
+  foto_out: string | null
+  kode_jam_kerja: string
+  status: string
+  nama_jam_kerja: string
+  jam_masuk: string
+  jam_pulang: string
+}
+
+export interface PresensiHistoryResponse {
+  success: boolean
+  data: PresensiHistoryItem[]
+}
+
+export const getPresensiHistory = async (
+  startDate?: string,
+  endDate?: string
+): Promise<PresensiHistoryResponse> => {
+  const params: Record<string, string> = {}
+  if (startDate) params.start_date = startDate
+  if (endDate) params.end_date = endDate
+
+  const { data } = await apiClient.get<PresensiHistoryResponse>('/api/presensi/karyawan/history', { params })
+  return data
+}

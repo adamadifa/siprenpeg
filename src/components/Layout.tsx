@@ -34,9 +34,9 @@ export const Layout: React.FC = () => {
 
           {/* Histori */}
           <Link
-            to="/presensi"
+            to="/presensi/history"
             className={`flex flex-col items-center gap-1 transition-all duration-200 ${
-              location.pathname === '/presensi' ? 'text-[#064e3b] font-semibold' : 'text-slate-500 hover:text-emerald-700'
+              location.pathname === '/presensi/history' ? 'text-[#064e3b] font-semibold' : 'text-slate-500 hover:text-emerald-700'
             }`}
           >
             <IconFileText size={22} />

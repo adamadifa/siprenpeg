@@ -9,18 +9,69 @@ import {
   IconWifi,
   IconId,
   IconTrendingDown,
-  IconTrendingUp
+  IconTrendingUp,
+  IconFilter,
+  IconX
 } from '@tabler/icons-react'
 import { getSingleTabunganDetail } from '../api/tabungan'
 import { fetchSettings } from '../api/settings'
+import flatpickr from 'flatpickr'
+import 'flatpickr/dist/flatpickr.min.css'
 
 const TabunganDetail: React.FC = () => {
   const { noRekening } = useParams<{ noRekening: string }>()
   const navigate = useNavigate()
 
+  const [startDate, setStartDate] = React.useState<string>('')
+  const [endDate, setEndDate] = React.useState<string>('')
+
+  const [isFilterOpen, setIsFilterOpen] = React.useState(false)
+  const [tempStartDate, setTempStartDate] = React.useState(() => {
+    const d = new Date()
+    d.setDate(d.getDate() - 30) // 30 days ago
+    return d.toISOString().split('T')[0]
+  })
+  const [tempEndDate, setTempEndDate] = React.useState(() => {
+    return new Date().toISOString().split('T')[0]
+  })
+
+  const fpStartRef = React.useRef<any>(null)
+  const startRef = React.useCallback((node: HTMLInputElement | null) => {
+    if (fpStartRef.current) {
+      fpStartRef.current.destroy()
+      fpStartRef.current = null
+    }
+    if (node) {
+      fpStartRef.current = flatpickr(node, {
+        dateFormat: 'Y-m-d',
+        defaultDate: tempStartDate || undefined,
+        onChange: (_, dateStr) => {
+          setTempStartDate(dateStr)
+        }
+      })
+    }
+  }, [])
+
+  const fpEndRef = React.useRef<any>(null)
+  const endRef = React.useCallback((node: HTMLInputElement | null) => {
+    if (fpEndRef.current) {
+      fpEndRef.current.destroy()
+      fpEndRef.current = null
+    }
+    if (node) {
+      fpEndRef.current = flatpickr(node, {
+        dateFormat: 'Y-m-d',
+        defaultDate: tempEndDate || undefined,
+        onChange: (_, dateStr) => {
+          setTempEndDate(dateStr)
+        }
+      })
+    }
+  }, [])
+
   const { data: responseData, isLoading, error } = useQuery({
-    queryKey: ['tabunganDetail', noRekening],
-    queryFn: () => getSingleTabunganDetail(noRekening || ''),
+    queryKey: ['tabunganDetail', noRekening, startDate, endDate],
+    queryFn: () => getSingleTabunganDetail(noRekening || '', startDate, endDate),
     enabled: !!noRekening,
     retry: false
   })
@@ -238,10 +289,99 @@ const TabunganDetail: React.FC = () => {
         </div>
       </div>
 
+      {/* Filter Modal */}
+      {isFilterOpen && (
+        <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-0 sm:p-4 bg-black/50 backdrop-blur-sm transition-opacity duration-300">
+          <div className="bg-white w-full sm:max-w-md rounded-t-3xl sm:rounded-2xl overflow-hidden shadow-2xl flex flex-col animate-in slide-in-from-bottom duration-300">
+            {/* Header */}
+            <div className="px-5 py-4 border-b border-gray-105 flex items-center justify-between bg-gray-50">
+              <h3 className="text-sm font-bold text-gray-850 flex items-center gap-2">
+                <IconFilter size={18} className="text-[#064e3b]" /> Filter Tanggal Mutasi
+              </h3>
+              <button 
+                onClick={() => setIsFilterOpen(false)}
+                className="p-1 rounded-full hover:bg-gray-200 text-gray-400 transition-colors"
+              >
+                <IconX size={18} />
+              </button>
+            </div>
+            
+            {/* Content */}
+            <div className="p-5 space-y-4">
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-1.5">Dari Tanggal</label>
+                  <input 
+                    ref={startRef}
+                    type="text" 
+                    placeholder="Pilih tanggal"
+                    readOnly
+                    className="w-full text-xs bg-gray-50 border border-gray-200 rounded-xl px-3.5 py-2.5 text-gray-705 focus:outline-none focus:border-[#064e3b] font-medium"
+                  />
+                </div>
+                <div>
+                  <label className="block text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-1.5">Sampai Tanggal</label>
+                  <input 
+                    ref={endRef}
+                    type="text" 
+                    placeholder="Pilih tanggal"
+                    readOnly
+                    className="w-full text-xs bg-gray-50 border border-gray-200 rounded-xl px-3.5 py-2.5 text-gray-705 focus:outline-none focus:border-[#064e3b] font-medium"
+                  />
+                </div>
+              </div>
+            </div>
+
+            {/* Footer */}
+            <div className="px-5 py-4 bg-gray-50 border-t border-gray-100 flex items-center gap-3 justify-end">
+              <button 
+                onClick={() => {
+                  const defaultStart = new Date()
+                  defaultStart.setDate(defaultStart.getDate() - 30)
+                  const defaultStartStr = defaultStart.toISOString().split('T')[0]
+                  const defaultEndStr = new Date().toISOString().split('T')[0]
+                  setTempStartDate(defaultStartStr)
+                  setTempEndDate(defaultEndStr)
+                  setStartDate('')
+                  setEndDate('')
+                  setIsFilterOpen(false)
+                }}
+                className="px-4 py-2 text-xs font-semibold text-gray-500 hover:text-gray-750 transition-colors"
+              >
+                Reset
+              </button>
+              <button 
+                onClick={() => {
+                  setStartDate(tempStartDate)
+                  setEndDate(tempEndDate)
+                  setIsFilterOpen(false)
+                }}
+                className="px-5 py-2 bg-[#064e3b] hover:bg-[#053e30] text-white rounded-xl font-bold text-xs shadow-md transition-colors"
+              >
+                Terapkan
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* Histori Mutasi Transaksi */}
       <div className="px-5 mt-6">
         <div className="flex justify-between items-center mb-3">
-          <h3 className="text-xs font-bold text-gray-800 uppercase tracking-wider">Histori Mutasi Transaksi</h3>
+          <div className="flex items-center gap-2">
+            <h3 className="text-xs font-bold text-gray-800 uppercase tracking-wider">Histori Mutasi Transaksi</h3>
+            <button 
+              onClick={() => {
+                setTempStartDate(startDate)
+                setTempEndDate(endDate)
+                setIsFilterOpen(true)
+              }}
+              className="p-1 rounded-lg bg-emerald-50 hover:bg-emerald-100 text-[#064e3b] transition-colors border border-emerald-100/50"
+              title="Filter Tanggal"
+            >
+              <IconFilter size={14} />
+            </button>
+          </div>
           <span className="text-[10px] text-gray-400 font-medium">{mutasi.length} Transaksi</span>
         </div>
 

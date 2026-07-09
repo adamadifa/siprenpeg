@@ -3,20 +3,15 @@ import { Link } from 'react-router-dom'
 import { useQuery } from '@tanstack/react-query'
 import { getCurrentUser } from '../api/auth'
 import { fetchSettings } from '../api/settings'
+import { getPresensiHistory } from '../api/presensi'
 import {
   IconFingerprint,
   IconCalendarEvent,
-  IconClock,
   IconCash,
   IconUserCheck,
-  IconUsers,
-  IconInfoCircle,
-  IconExchange,
   IconBell,
   IconSettings,
   IconMapPin,
-  IconNotes,
-  IconPin,
   IconHeartHandshake,
   IconBriefcase
 } from '@tabler/icons-react'
@@ -32,6 +27,11 @@ const Dashboard = () => {
   const { data: settingsData } = useQuery({
     queryKey: ['settings'],
     queryFn: fetchSettings
+  })
+
+  const { data: historyResponse } = useQuery({
+    queryKey: ['presensiHistory', '', ''],
+    queryFn: () => getPresensiHistory()
   })
 
   const user = userData?.data
@@ -298,41 +298,78 @@ const Dashboard = () => {
           </div>
         </div>
 
-        {/* Memos */}
+        {/* Histori Presensi (30 Hari Terakhir) */}
         <div>
           <div className="flex justify-between items-center mb-3">
             <div className="flex items-center gap-1.5">
-              <IconNotes size={18} className="text-emerald-600" />
-              <p className="text-sm font-semibold text-gray-900">Memo</p>
+              <IconCalendarEvent size={18} className="text-emerald-600" />
+              <p className="text-sm font-semibold text-gray-900">Histori Presensi (30 Hari Terakhir)</p>
             </div>
-            <a href="#" className="text-xs text-emerald-600 font-medium hover:underline">
+            <Link to="/presensi/history" className="text-xs text-emerald-600 font-medium hover:underline">
               Lihat semua
-            </a>
+            </Link>
           </div>
 
-          <div className="space-y-2">
-            <div className="bg-white rounded-xl border border-gray-200 p-3">
-              <div className="flex justify-between items-start">
-                <div className="flex items-center gap-1.5">
-                  <IconPin size={14} className="text-red-500 rotate-45 shrink-0" />
-                  <span className="text-sm font-medium text-gray-900">Peraturan Perusahaan 2026</span>
-                </div>
-                <span className="text-xs text-gray-400 shrink-0 ml-2">17 Apr</span>
-              </div>
-              <p className="text-xs text-gray-500 mt-1.5 line-clamp-2">
-                Kepada seluruh Asatidz dan Karyawan, menyikapi hasil rapat direksi terkait jam operasional...
-              </p>
-            </div>
+          <div className="space-y-2.5">
+            {historyResponse?.data && historyResponse.data.slice(0, 5).map((item) => {
+              const dayName = new Date(item.tanggal).toLocaleDateString('id-ID', { weekday: 'long' })
+              const dateNumber = new Date(item.tanggal).getDate().toString().padStart(2, '0')
+              const monthName = new Date(item.tanggal).toLocaleDateString('id-ID', { month: 'short' }).toUpperCase()
+              
+              // Calculate late status
+              const isLate = item.jam_in && item.jam_masuk && (
+                new Date(`${item.tanggal}T${item.jam_in.split(' ')[1] || item.jam_in}`) > 
+                new Date(`${item.tanggal}T${item.jam_masuk}`)
+              )
 
-            <div className="bg-white rounded-xl border border-gray-200 p-3">
-              <div className="flex justify-between items-start">
-                <div className="flex items-center gap-1.5">
-                  <IconPin size={14} className="text-gray-400 rotate-45 shrink-0" />
-                  <span className="text-sm font-medium text-gray-900">Informasi Pemotongan PPH 21</span>
+              return (
+                <div 
+                  key={item.id} 
+                  className="bg-white rounded-xl border border-emerald-100 p-3 shadow-xs flex items-center gap-3"
+                >
+                  {/* Calendar Left Side */}
+                  <div className="flex flex-col items-center justify-center w-11 h-12 bg-gray-50 border border-gray-250/70 rounded-xl overflow-hidden shrink-0">
+                    <div className="w-full py-0.5 text-center text-[7px] font-bold uppercase bg-emerald-600 text-white tracking-wider">
+                      {monthName}
+                    </div>
+                    <div className="flex-1 flex flex-col items-center justify-center leading-none">
+                      <span className="text-[12px] font-bold text-gray-800">{dateNumber}</span>
+                      <span className="text-[6.5px] font-medium text-gray-400 uppercase mt-0.5">{dayName.slice(0, 3)}</span>
+                    </div>
+                  </div>
+
+                  {/* Details Right Side */}
+                  <div className="flex-1 min-w-0">
+                    <div className="flex justify-between items-start mb-0.5">
+                      <p className="text-xs font-semibold text-gray-800">
+                        {item.nama_jam_kerja}
+                      </p>
+                      {isLate && (
+                        <span className="text-[7px] font-extrabold px-1.5 py-0.5 rounded bg-amber-50 text-amber-700 border border-amber-200/40">
+                          TERLAMBAT
+                        </span>
+                      )}
+                    </div>
+
+                    <div className="flex items-center gap-3 text-[9px] text-gray-500 font-medium mt-1">
+                      <span className="flex items-center gap-0.5">
+                        In: <strong className="text-gray-700 font-semibold">{item.jam_in ? (item.jam_in.split(' ')[1]?.slice(0, 5) || item.jam_in.slice(0, 5)) : '--:--'}</strong>
+                      </span>
+                      <span className="w-px h-2.5 bg-gray-200" />
+                      <span className="flex items-center gap-0.5">
+                        Out: <strong className="text-gray-700 font-semibold">{item.jam_out ? (item.jam_out.split(' ')[1]?.slice(0, 5) || item.jam_out.slice(0, 5)) : '--:--'}</strong>
+                      </span>
+                    </div>
+                  </div>
                 </div>
-                <span className="text-xs text-gray-400 shrink-0 ml-2">27 Mei</span>
+              )
+            })}
+
+            {(!historyResponse?.data || historyResponse.data.length === 0) && (
+              <div className="bg-white rounded-xl border border-gray-200 p-8 text-center text-gray-400 text-xs">
+                Belum ada data riwayat presensi 30 hari terakhir.
               </div>
-            </div>
+            )}
           </div>
         </div>
       </div>

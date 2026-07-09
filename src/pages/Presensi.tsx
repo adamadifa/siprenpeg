@@ -232,13 +232,20 @@ const Presensi: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-gray-50 pb-8">
-      {/* Green brand top section */}
       <div className="bg-[#064e3b] px-5 pt-5 pb-20">
-        <div className="flex items-center gap-3">
-          <button onClick={() => navigate('/dashboard')} className="p-1.5 rounded-full hover:bg-white/10 transition-colors">
-            <IconArrowLeft size={20} className="text-white" />
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <button onClick={() => navigate('/dashboard')} className="p-1.5 rounded-full hover:bg-white/10 transition-colors">
+              <IconArrowLeft size={20} className="text-white" />
+            </button>
+            <h1 className="text-base font-bold text-white tracking-wide">Presensi Kehadiran</h1>
+          </div>
+          <button 
+            onClick={() => navigate('/presensi/history')} 
+            className="px-3 py-1.5 rounded-lg bg-white/10 hover:bg-white/20 text-white text-xs font-bold transition-colors flex items-center gap-1.5"
+          >
+            <IconClock size={14} /> Histori
           </button>
-          <h1 className="text-base font-bold text-white tracking-wide">Presensi Kehadiran</h1>
         </div>
 
         {/* Shift & Time Row */}
