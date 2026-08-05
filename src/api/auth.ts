@@ -39,6 +39,8 @@ export interface UserResponse {
       jabatan: string
       nama_unit: string
       foto: string | null
+      is_guru?: boolean
+      [key: string]: any
     }
     [key: string]: any
   }

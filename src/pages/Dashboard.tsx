@@ -13,7 +13,8 @@ import {
   IconSettings,
   IconMapPin,
   IconHeartHandshake,
-  IconBriefcase
+  IconBriefcase,
+  IconSchool
 } from '@tabler/icons-react'
 
 const Dashboard = () => {
@@ -109,6 +110,16 @@ const Dashboard = () => {
     { icon: IconHeartHandshake, label: 'Pinjaman', color: 'text-amber-600', bg: 'bg-amber-50', to: '/pinjaman' },
     { icon: IconBriefcase, label: 'Tabungan', color: 'text-blue-600', bg: 'bg-blue-50', to: '/tabungan' },
   ]
+
+  if (user?.karyawan?.is_guru) {
+    menuItems.push({
+      icon: IconSchool,
+      label: 'Akademik',
+      color: 'text-rose-600',
+      bg: 'bg-rose-50',
+      to: '/akademik'
+    })
+  }
 
   return (
     <div className="min-h-screen bg-gray-50 pb-24">

@@ -15,6 +15,15 @@ import Ibadah from './pages/Ibadah'
 import Tabungan from './pages/Tabungan'
 import TabunganDetail from './pages/TabunganDetail'
 import PresensiHistory from './pages/PresensiHistory'
+import Akademik from './pages/Akademik'
+import InputPresensiMapel from './pages/InputPresensiMapel'
+import PresensiMapelHistory from './pages/PresensiMapelHistory'
+import Jadwal from './pages/Jadwal'
+import Penilaian from './pages/Penilaian'
+import ManageNilai from './pages/ManageNilai'
+import WaliKelas from './pages/WaliKelas'
+import WaliKelasDetail from './pages/WaliKelasDetail'
+import WaliKelasSiswaDetail from './pages/WaliKelasSiswaDetail'
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -43,6 +52,15 @@ const App: React.FC = () => {
           <Route element={<ProtectedRoute />}>
             <Route element={<Layout />}>
               <Route path="/dashboard" element={<Dashboard />} />
+              <Route path="/akademik" element={<Akademik />} />
+              <Route path="/akademik/presensi-mapel" element={<PresensiMapelHistory />} />
+              <Route path="/akademik/presensi-mapel/:jadwalId" element={<InputPresensiMapel />} />
+              <Route path="/akademik/jadwal" element={<Jadwal />} />
+              <Route path="/akademik/penilaian/:jadwalId" element={<Penilaian />} />
+              <Route path="/akademik/penilaian/:jadwalId/manage/:kategori" element={<ManageNilai />} />
+              <Route path="/akademik/wali-kelas" element={<WaliKelas />} />
+              <Route path="/akademik/wali-kelas/detail/:jadwalId" element={<WaliKelasDetail />} />
+              <Route path="/akademik/wali-kelas/siswa/:idSiswa" element={<WaliKelasSiswaDetail />} />
               <Route path="/presensi" element={<Presensi />} />
               <Route path="/presensi/history" element={<PresensiHistory />} />
                <Route path="/izin" element={<Izin />} />
