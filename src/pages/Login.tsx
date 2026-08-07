@@ -13,6 +13,9 @@ const Login: React.FC = () => {
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
 
+  const [deferredPrompt, setDeferredPrompt] = useState<any>(null)
+  const [showInstallBtn, setShowInstallBtn] = useState(false)
+
   // Redirect to dashboard if already logged in
   useEffect(() => {
     const token = localStorage.getItem('token')
@@ -20,6 +23,36 @@ const Login: React.FC = () => {
       navigate('/dashboard', { replace: true })
     }
   }, [navigate])
+
+  // Listen for PWA install prompt
+  useEffect(() => {
+    const handleBeforeInstallPrompt = (e: Event) => {
+      e.preventDefault()
+      setDeferredPrompt(e)
+      setShowInstallBtn(true)
+    }
+
+    window.addEventListener('beforeinstallprompt', handleBeforeInstallPrompt)
+
+    // Check if app is already running in standalone mode
+    if (window.matchMedia('(display-mode: standalone)').matches) {
+      setShowInstallBtn(false)
+    }
+
+    return () => {
+      window.removeEventListener('beforeinstallprompt', handleBeforeInstallPrompt)
+    }
+  }, [])
+
+  const handleInstallPWA = async () => {
+    if (!deferredPrompt) return
+    deferredPrompt.prompt()
+    const { outcome } = await deferredPrompt.userChoice
+    if (outcome === 'accepted') {
+      setDeferredPrompt(null)
+      setShowInstallBtn(false)
+    }
+  }
 
   // Fetch settings dynamically using TanStack React Query
   const { data: settingsData, isPending } = useQuery({
@@ -80,7 +113,16 @@ const Login: React.FC = () => {
         <button className="w-10 h-10 rounded-full bg-emerald-950/40 backdrop-blur-md border border-emerald-900/50 flex items-center justify-center text-white active:scale-95 transition-all">
           <IconChevronLeft size={20} />
         </button>
-        <div className="w-10 h-10" /> {/* Spacer */}
+        {showInstallBtn ? (
+          <button 
+            onClick={handleInstallPWA}
+            className="px-4 py-1.5 rounded-full bg-emerald-500 hover:bg-emerald-600 active:scale-95 text-emerald-950 text-xs font-black tracking-wide border-0 shadow-md transition-all z-20"
+          >
+            INSTALL APP
+          </button>
+        ) : (
+          <div className="w-10 h-10" /> /* Spacer */
+        )}
       </div>
 
       {/* Hero Logo / Avatar Section */}
