@@ -21,24 +21,7 @@ const InputAgenda: React.FC = () => {
   const [namaKegiatan, setNamaKegiatan] = useState('')
   const [uraianKegiatan, setUraianKegiatan] = useState('')
 
-  // Flatpickr ref
-  const fpRef = useRef<any>(null)
 
-  const dateCallback = useCallback((node: HTMLInputElement | null) => {
-    if (fpRef.current) {
-      fpRef.current.destroy()
-      fpRef.current = null
-    }
-    if (node) {
-      fpRef.current = flatpickr(node, {
-        dateFormat: 'Y-m-d',
-        defaultDate: tanggal || undefined,
-        onChange: (_, dateStr) => {
-          setTanggal(dateStr)
-        }
-      })
-    }
-  }, [tanggal])
 
   // Queries
   const { data: settingsData } = useQuery({
@@ -116,12 +99,11 @@ const InputAgenda: React.FC = () => {
             </label>
             <div className="relative">
               <input
-                ref={dateCallback}
-                type="text"
-                readOnly
-                className="w-full bg-slate-50 border border-gray-250/70 rounded-lg pl-3 pr-10 py-2.5 text-xs focus:outline-none focus:ring-1 focus:ring-emerald-500 font-medium text-gray-700 cursor-pointer"
+                type="date"
+                value={tanggal}
+                onChange={(e) => setTanggal(e.target.value)}
+                className="w-full bg-slate-50 border border-gray-250/70 rounded-lg px-3 py-2.5 text-xs focus:outline-none focus:ring-1 focus:ring-emerald-500 font-medium text-gray-700 cursor-pointer"
               />
-              <IconCalendar size={16} className="text-gray-400 absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none" />
             </div>
           </div>
 
