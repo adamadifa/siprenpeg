@@ -27,40 +27,7 @@ const Agenda: React.FC = () => {
   const [endDate, setEndDate] = useState(today)
 
   // Flatpickr refs
-  const fpStartRef = useRef<any>(null)
-  const fpEndRef = useRef<any>(null)
 
-  const startCallback = useCallback((node: HTMLInputElement | null) => {
-    if (fpStartRef.current) {
-      fpStartRef.current.destroy()
-      fpStartRef.current = null
-    }
-    if (node) {
-      fpStartRef.current = flatpickr(node, {
-        dateFormat: 'Y-m-d',
-        defaultDate: startDate || undefined,
-        onChange: (_, dateStr) => {
-          setStartDate(dateStr)
-        }
-      })
-    }
-  }, [startDate])
-
-  const endCallback = useCallback((node: HTMLInputElement | null) => {
-    if (fpEndRef.current) {
-      fpEndRef.current.destroy()
-      fpEndRef.current = null
-    }
-    if (node) {
-      fpEndRef.current = flatpickr(node, {
-        dateFormat: 'Y-m-d',
-        defaultDate: endDate || undefined,
-        onChange: (_, dateStr) => {
-          setEndDate(dateStr)
-        }
-      })
-    }
-  }, [endDate])
 
   // Queries
   const { data: agendaResponse, isLoading } = useQuery({
@@ -143,18 +110,18 @@ const Agenda: React.FC = () => {
             <div>
               <label className="text-[10px] font-medium text-gray-500 block mb-1">DARI</label>
               <input
-                ref={startCallback}
-                type="text"
-                readOnly
+                type="date"
+                value={startDate}
+                onChange={(e) => setStartDate(e.target.value)}
                 className="w-full bg-slate-50 border border-gray-200 rounded-lg px-3 py-2 text-xs focus:outline-none focus:ring-1 focus:ring-emerald-500 font-medium text-gray-700"
               />
             </div>
             <div>
               <label className="text-[10px] font-medium text-gray-500 block mb-1">SAMPAI</label>
               <input
-                ref={endCallback}
-                type="text"
-                readOnly
+                type="date"
+                value={endDate}
+                onChange={(e) => setEndDate(e.target.value)}
                 className="w-full bg-slate-50 border border-gray-200 rounded-lg px-3 py-2 text-xs focus:outline-none focus:ring-1 focus:ring-emerald-500 font-medium text-gray-700"
               />
             </div>

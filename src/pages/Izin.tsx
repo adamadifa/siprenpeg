@@ -33,42 +33,7 @@ const Izin: React.FC = () => {
   const [sidImage, setSidImage] = React.useState<string | null>(null)
   const [imagePreview, setImagePreview] = React.useState<string | null>(null)
 
-  // Flatpickr refs
-  const fpStartRef = React.useRef<any>(null)
-  const fpEndRef = React.useRef<any>(null)
 
-  // Initialize flatpickr on form inputs when modal opens
-  const startCallback = React.useCallback((node: HTMLInputElement | null) => {
-    if (fpStartRef.current) {
-      fpStartRef.current.destroy()
-      fpStartRef.current = null
-    }
-    if (node) {
-      fpStartRef.current = flatpickr(node, {
-        dateFormat: 'Y-m-d',
-        defaultDate: dari || undefined,
-        onChange: (_, dateStr) => {
-          setDari(dateStr)
-        }
-      })
-    }
-  }, [isModalOpen])
-
-  const endCallback = React.useCallback((node: HTMLInputElement | null) => {
-    if (fpEndRef.current) {
-      fpEndRef.current.destroy()
-      fpEndRef.current = null
-    }
-    if (node) {
-      fpEndRef.current = flatpickr(node, {
-        dateFormat: 'Y-m-d',
-        defaultDate: sampai || undefined,
-        onChange: (_, dateStr) => {
-          setSampai(dateStr)
-        }
-      })
-    }
-  }, [isModalOpen])
 
   // Queries
   const { data: historyResponse, isLoading } = useQuery({
@@ -444,20 +409,18 @@ const Izin: React.FC = () => {
                 <div>
                   <label className="block text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-1.5">Dari Tanggal</label>
                   <input 
-                    ref={startCallback}
-                    type="text" 
-                    placeholder="Pilih tanggal"
-                    readOnly
+                    type="date" 
+                    value={dari}
+                    onChange={(e) => setDari(e.target.value)}
                     className="w-full text-xs bg-gray-50 border border-gray-200 rounded-xl px-3.5 py-2.5 text-gray-700 focus:outline-none focus:border-[#064e3b] font-medium"
                   />
                 </div>
                 <div>
                   <label className="block text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-1.5">Sampai Tanggal</label>
                   <input 
-                    ref={endCallback}
-                    type="text" 
-                    placeholder="Pilih tanggal"
-                    readOnly
+                    type="date" 
+                    value={sampai}
+                    onChange={(e) => setSampai(e.target.value)}
                     className="w-full text-xs bg-gray-50 border border-gray-200 rounded-xl px-3.5 py-2.5 text-gray-700 focus:outline-none focus:border-[#064e3b] font-medium"
                   />
                 </div>

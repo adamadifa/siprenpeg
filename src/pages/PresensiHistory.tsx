@@ -27,39 +27,7 @@ const PresensiHistory: React.FC = () => {
     return new Date().toISOString().split('T')[0]
   })
 
-  const fpStartRef = React.useRef<any>(null)
-  const startRef = React.useCallback((node: HTMLInputElement | null) => {
-    if (fpStartRef.current) {
-      fpStartRef.current.destroy()
-      fpStartRef.current = null
-    }
-    if (node) {
-      fpStartRef.current = flatpickr(node, {
-        dateFormat: 'Y-m-d',
-        defaultDate: tempStartDate || undefined,
-        onChange: (_, dateStr) => {
-          setTempStartDate(dateStr)
-        }
-      })
-    }
-  }, [])
 
-  const fpEndRef = React.useRef<any>(null)
-  const endRef = React.useCallback((node: HTMLInputElement | null) => {
-    if (fpEndRef.current) {
-      fpEndRef.current.destroy()
-      fpEndRef.current = null
-    }
-    if (node) {
-      fpEndRef.current = flatpickr(node, {
-        dateFormat: 'Y-m-d',
-        defaultDate: tempEndDate || undefined,
-        onChange: (_, dateStr) => {
-          setTempEndDate(dateStr)
-        }
-      })
-    }
-  }, [])
 
   const { data: responseData, isLoading } = useQuery({
     queryKey: ['presensiHistory', startDate, endDate],
@@ -251,20 +219,18 @@ const PresensiHistory: React.FC = () => {
                 <div>
                   <label className="block text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-1.5">Dari Tanggal</label>
                   <input 
-                    ref={startRef}
-                    type="text" 
-                    placeholder="Pilih tanggal"
-                    readOnly
+                    type="date" 
+                    value={tempStartDate}
+                    onChange={(e) => setTempStartDate(e.target.value)}
                     className="w-full text-xs bg-gray-50 border border-gray-200 rounded-xl px-3.5 py-2.5 text-gray-700 focus:outline-none focus:border-[#064e3b] font-medium"
                   />
                 </div>
                 <div>
                   <label className="block text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-1.5">Sampai Tanggal</label>
                   <input 
-                    ref={endRef}
-                    type="text" 
-                    placeholder="Pilih tanggal"
-                    readOnly
+                    type="date" 
+                    value={tempEndDate}
+                    onChange={(e) => setTempEndDate(e.target.value)}
                     className="w-full text-xs bg-gray-50 border border-gray-200 rounded-xl px-3.5 py-2.5 text-gray-700 focus:outline-none focus:border-[#064e3b] font-medium"
                   />
                 </div>
