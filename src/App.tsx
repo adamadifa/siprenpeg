@@ -24,6 +24,10 @@ import ManageNilai from './pages/ManageNilai'
 import WaliKelas from './pages/WaliKelas'
 import WaliKelasDetail from './pages/WaliKelasDetail'
 import WaliKelasSiswaDetail from './pages/WaliKelasSiswaDetail'
+import Kegiatan from './pages/Kegiatan'
+import InputKegiatan from './pages/InputKegiatan'
+import Agenda from './pages/Agenda'
+import InputAgenda from './pages/InputAgenda'
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -64,6 +68,10 @@ const App: React.FC = () => {
               <Route path="/presensi" element={<Presensi />} />
               <Route path="/presensi/history" element={<PresensiHistory />} />
                <Route path="/izin" element={<Izin />} />
+              <Route path="/kegiatan" element={<Kegiatan />} />
+              <Route path="/kegiatan/input" element={<InputKegiatan />} />
+              <Route path="/agenda" element={<Agenda />} />
+              <Route path="/agenda/input" element={<InputAgenda />} />
               <Route path="/checklist-ibadah" element={<Ibadah />} />
               <Route path="/profile" element={<Profile />} />
               <Route path="/simpanan" element={<Simpanan />} />
