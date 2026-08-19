@@ -7,6 +7,7 @@ import { getPresensiHistory } from '../api/presensi'
 import {
   IconFingerprint,
   IconCalendarEvent,
+  IconCalendar,
   IconCash,
   IconUserCheck,
   IconBell,
@@ -112,6 +113,7 @@ const Dashboard = () => {
     { icon: IconBriefcase, label: 'Tabungan', color: 'text-blue-600', bg: 'bg-blue-50', to: '/tabungan' },
     { icon: IconClipboardList, label: 'Kegiatan', color: 'text-teal-600', bg: 'bg-teal-50', to: '/kegiatan' },
     { icon: IconCalendarEvent, label: 'Agenda', color: 'text-orange-600', bg: 'bg-orange-50', to: '/agenda' },
+    { icon: IconCalendar, label: 'Agenda Pesantren', color: 'text-emerald-700', bg: 'bg-emerald-50', to: '/agenda-pesantren' },
   ]
 
   if (user?.karyawan?.is_guru) {
