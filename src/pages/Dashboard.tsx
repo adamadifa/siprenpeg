@@ -16,7 +16,9 @@ import {
   IconHeartHandshake,
   IconBriefcase,
   IconSchool,
-  IconClipboardList
+  IconClipboardList,
+  IconBook,
+  IconClipboardText
 } from '@tabler/icons-react'
 
 const Dashboard = () => {
@@ -42,10 +44,13 @@ const Dashboard = () => {
   
   const localJabatan = localStorage.getItem('user_jabatan')
   const localUnit = localStorage.getItem('user_unit')
-  const localDepartment = localJabatan && localUnit ? `${localJabatan} (${localUnit})` : 'Karyawan - Asatidz'
+  const localDept = localStorage.getItem('user_dept')
+  const localDepartment = localJabatan && localUnit 
+    ? `${localJabatan} (${localUnit}${localDept ? ' - ' + localDept : ''})` 
+    : 'Karyawan - Asatidz'
   
   const departmentName = user?.karyawan 
-    ? `${user.karyawan.jabatan} (${user.karyawan.nama_unit})`
+    ? `${user.karyawan.jabatan} (${user.karyawan.nama_unit}${user.karyawan.nama_dept ? ' - ' + user.karyawan.nama_dept : ''})`
     : localDepartment
   const userPhoto = user?.karyawan?.foto || localStorage.getItem('user_photo') || null
 
@@ -112,6 +117,8 @@ const Dashboard = () => {
     { icon: IconHeartHandshake, label: 'Pinjaman', color: 'text-amber-600', bg: 'bg-amber-50', to: '/pinjaman' },
     { icon: IconBriefcase, label: 'Tabungan', color: 'text-blue-600', bg: 'bg-blue-50', to: '/tabungan' },
     { icon: IconClipboardList, label: 'Kegiatan', color: 'text-teal-600', bg: 'bg-teal-50', to: '/kegiatan' },
+    { icon: IconBook, label: 'Program Kerja', color: 'text-emerald-800', bg: 'bg-emerald-50', to: '/program-kerja' },
+    { icon: IconClipboardText, label: 'Jobdesk', color: 'text-blue-700', bg: 'bg-blue-50', to: '/jobdesk' },
     { icon: IconCalendarEvent, label: 'Agenda', color: 'text-orange-600', bg: 'bg-orange-50', to: '/agenda' },
     { icon: IconCalendar, label: 'Agenda Pesantren', color: 'text-emerald-700', bg: 'bg-emerald-50', to: '/agenda-pesantren' },
   ]

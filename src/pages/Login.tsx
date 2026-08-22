@@ -84,6 +84,7 @@ const Login: React.FC = () => {
         localStorage.setItem('user_name', user.karyawan?.nama || user.name)
         localStorage.setItem('user_jabatan', user.karyawan?.jabatan || '')
         localStorage.setItem('user_unit', user.karyawan?.nama_unit || '')
+        localStorage.setItem('user_dept', user.karyawan?.nama_dept || '')
         localStorage.setItem('user_photo', user.karyawan?.foto || '')
         navigate('/dashboard', { replace: true })
       } else {

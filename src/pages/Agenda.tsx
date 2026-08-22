@@ -1,4 +1,4 @@
-import React, { useState, useRef, useCallback } from 'react'
+import React, { useState, useRef, useCallback, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import Swal from 'sweetalert2'
@@ -26,7 +26,51 @@ const Agenda: React.FC = () => {
   const [startDate, setStartDate] = useState(thirtyDaysAgo)
   const [endDate, setEndDate] = useState(today)
 
-  // Flatpickr refs
+  const startRef = useRef<HTMLInputElement>(null)
+  const endRef = useRef<HTMLInputElement>(null)
+
+  useEffect(() => {
+    let startInstance: any
+    let endInstance: any
+
+    const formatDateToYmd = (date: Date) => {
+      const year = date.getFullYear()
+      const month = String(date.getMonth() + 1).padStart(2, '0')
+      const day = String(date.getDate()).padStart(2, '0')
+      return `${year}-${month}-${day}`
+    }
+
+    if (startRef.current) {
+      startInstance = flatpickr(startRef.current, {
+        dateFormat: 'd F Y',
+        disableMobile: true,
+        defaultDate: startDate,
+        onChange: (selectedDates) => {
+          if (selectedDates.length > 0) {
+            setStartDate(formatDateToYmd(selectedDates[0]))
+          }
+        }
+      })
+    }
+
+    if (endRef.current) {
+      endInstance = flatpickr(endRef.current, {
+        dateFormat: 'd F Y',
+        disableMobile: true,
+        defaultDate: endDate,
+        onChange: (selectedDates) => {
+          if (selectedDates.length > 0) {
+            setEndDate(formatDateToYmd(selectedDates[0]))
+          }
+        }
+      })
+    }
+
+    return () => {
+      if (startInstance) startInstance.destroy()
+      if (endInstance) endInstance.destroy()
+    }
+  }, [])
 
 
   // Queries
@@ -101,29 +145,31 @@ const Agenda: React.FC = () => {
 
       <div className="p-4 space-y-4">
         {/* Filters */}
-        <div className="bg-white rounded-xl border border-gray-200 p-4 shadow-sm space-y-3">
-          <div className="flex items-center gap-1.5 border-b border-gray-100 pb-2">
-            <IconCalendar size={18} className="text-emerald-600" />
-            <span className="text-sm font-semibold text-gray-900">Filter Tanggal</span>
-          </div>
-          <div className="grid grid-cols-2 gap-3">
-            <div>
-              <label className="text-[10px] font-medium text-gray-500 block mb-1">DARI</label>
-              <input
-                type="date"
-                value={startDate}
-                onChange={(e) => setStartDate(e.target.value)}
-                className="w-full bg-slate-50 border border-gray-200 rounded-lg px-3 py-2 text-xs focus:outline-none focus:ring-1 focus:ring-emerald-500 font-medium text-gray-700"
-              />
+        <div className="bg-white rounded-2xl border border-gray-200 p-4 shadow-sm">
+          <div className="grid grid-cols-2 gap-4">
+            <div className="relative">
+              <label className="absolute -top-2 left-3.5 bg-white px-1.5 text-[10px] font-bold text-slate-500 z-10 transition-colors">Start Date</label>
+              <div className="flex items-center border border-gray-200 rounded-xl px-3 py-2 bg-white focus-within:ring-1 focus-within:ring-emerald-600 focus-within:border-emerald-600 transition-all">
+                <IconCalendar size={16} className="text-slate-400 mr-2 shrink-0" />
+                <input
+                  ref={startRef}
+                  type="text"
+                  placeholder="Pilih Tanggal"
+                  className="w-full bg-transparent text-xs font-semibold text-slate-700 focus:outline-none cursor-pointer"
+                />
+              </div>
             </div>
-            <div>
-              <label className="text-[10px] font-medium text-gray-500 block mb-1">SAMPAI</label>
-              <input
-                type="date"
-                value={endDate}
-                onChange={(e) => setEndDate(e.target.value)}
-                className="w-full bg-slate-50 border border-gray-200 rounded-lg px-3 py-2 text-xs focus:outline-none focus:ring-1 focus:ring-emerald-500 font-medium text-gray-700"
-              />
+            <div className="relative">
+              <label className="absolute -top-2 left-3.5 bg-white px-1.5 text-[10px] font-bold text-slate-500 z-10 transition-colors">End Date</label>
+              <div className="flex items-center border border-gray-200 rounded-xl px-3 py-2 bg-white focus-within:ring-1 focus-within:ring-emerald-600 focus-within:border-emerald-600 transition-all">
+                <IconCalendar size={16} className="text-slate-400 mr-2 shrink-0" />
+                <input
+                  ref={endRef}
+                  type="text"
+                  placeholder="Pilih Tanggal"
+                  className="w-full bg-transparent text-xs font-semibold text-slate-700 focus:outline-none cursor-pointer"
+                />
+              </div>
             </div>
           </div>
         </div>
@@ -171,7 +217,10 @@ const Agenda: React.FC = () => {
                       </p>
                       <div className="mt-2 pt-2 border-t border-gray-100">
                         <p className="font-semibold text-gray-700 mb-1">Uraian Rencana:</p>
-                        <p className="text-gray-600 leading-relaxed whitespace-pre-line">{item.uraian_kegiatan}</p>
+                        <div 
+                          className="text-gray-600 leading-relaxed [&_p]:mb-2 last:[&_p]:mb-0"
+                          dangerouslySetInnerHTML={{ __html: item.uraian_kegiatan || '' }}
+                        />
                       </div>
                     </div>
                   </div>

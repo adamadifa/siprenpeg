@@ -29,6 +29,8 @@ import InputKegiatan from './pages/InputKegiatan'
 import Agenda from './pages/Agenda'
 import InputAgenda from './pages/InputAgenda'
 import AgendaPesantren from './pages/AgendaPesantren'
+import ProgramKerja from './pages/ProgramKerja'
+import Jobdesk from './pages/Jobdesk'
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -71,7 +73,9 @@ const App: React.FC = () => {
                <Route path="/izin" element={<Izin />} />
               <Route path="/kegiatan" element={<Kegiatan />} />
               <Route path="/kegiatan/input" element={<InputKegiatan />} />
-               <Route path="/agenda" element={<Agenda />} />
+              <Route path="/program-kerja" element={<ProgramKerja />} />
+              <Route path="/jobdesk" element={<Jobdesk />} />
+              <Route path="/agenda" element={<Agenda />} />
               <Route path="/agenda/input" element={<InputAgenda />} />
               <Route path="/agenda-pesantren" element={<AgendaPesantren />} />
               <Route path="/checklist-ibadah" element={<Ibadah />} />

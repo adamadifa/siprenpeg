@@ -239,6 +239,11 @@ const Profile: React.FC = () => {
             <span className="text-[8px] font-bold px-2 py-0.5 rounded bg-emerald-50 border border-emerald-100 text-[#064e3b] uppercase">
               {karyawan?.nama_unit || 'Unit Kerja'}
             </span>
+            {karyawan?.nama_dept && (
+              <span className="text-[8px] font-bold px-2 py-0.5 rounded bg-blue-50 border border-blue-100 text-blue-800 uppercase">
+                {karyawan.nama_dept}
+              </span>
+            )}
           </div>
         </div>
       </div>
